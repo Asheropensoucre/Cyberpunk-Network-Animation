@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyberpunk Network Animation</title>
+    <style>
+        body {
+            background-color: #0a0a0a; /* Dark background for high contrast */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container Setup */
+        #svg-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 600px; /* Default desktop height */
+            max-width: 1386px; /* Corresponds to the total width of both SVGs */
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+            background-color: #10141a;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.1), inset 0 0 10px rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .left-svg, .right-svg {
+            width: 50%; /* Each takes half the space */
+            height: 100%;
+            object-fit: cover; /* Stretch SVGs to fit their container */
+        }
+
+        /* --- Mobile Layout --- */
+        @media screen and (max-width: 768px) {
+            #svg-container {
+                flex-direction: column;
+                height: auto;
+                align-items: center;
+                border: none;
+                box-shadow: none;
+            }
+
+            .left-svg {
+                width: 100%;
+                height: auto;
+                /* Adjust viewBox to show a more centered, interesting part of the graphic */
+                viewBox: 200 200 800 400;
+            }
+
+            .right-svg {
+                display: none; /* Hide the right half completely on mobile */
+            }
+        }
+
+        /* --- Animations & Effects --- */
+        
+        /* Neon Glow Effect */
+        #svg-container svg .glow {
+            filter: drop-shadow(0px 0px 6px var(--glow-color, #00ffff));
+        }
+
+        /* Keyframe animation for drawing lines */
+        @keyframes drawLines {
+            to { stroke-dashoffset: 0; }
+        }
+
+        #svg-container svg line,
+        #svg-container svg polyline {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: drawLines 10s ease-in-out infinite alternate;
+            stroke-linecap: round;
+        }
+        
+        /* Stagger line animations */
+        #svg-container svg line:nth-of-type(2n), 
+        #svg-container svg polyline:nth-of-type(2n) { animation-delay: -2s; }
+        #svg-container svg line:nth-of-type(3n),
+        #svg-container svg polyline:nth-of-type(3n) { animation-delay: -4s; }
+        #svg-container svg line:nth-of-type(4n),
+        #svg-container svg polyline:nth-of-type(4n) { animation-delay: -6s; }
+
+
+        /* Staggered fade-in for nodes (circles) */
+        @keyframes fadeInNode {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        #svg-container svg circle {
+            opacity: 0;
+            transform-origin: center center;
+            animation: fadeInNode 5s ease-out infinite alternate;
+        }
+        
+        /* Stagger node animations */
+        #svg-container svg circle:nth-of-type(2n) { animation-delay: -1s; }
+        #svg-container svg circle:nth-of-type(3n) { animation-delay: -2s; }
+        #svg-container svg circle:nth-of-type(4n) { animation-delay: -3s; }
+        #svg-container svg circle:nth-of-type(5n) { animation-delay: -4s; }
+
+    </style>
+</head>
+<body>
+
+    <div id="svg-container">
+        <!-- 
+            SVG artwork is split into two halves for the desktop view.
+            On mobile, the right half is hidden and the left half's viewBox is adjusted.
+            TODO: To use your own art, you'll need to:
+            1. Create a large, wide SVG graphic.
+            2. Split it into two new SVG files (a left half and a right half).
+            3. Paste the code for the left half here.
+            4. Paste the code for the right half in the "right-svg" element below.
+            5. Adjust the viewBox attributes to show the correct portion of your graphic in each SVG.
+         -->
+
+        <!-- Left / Top Half -->
+        <svg class="left-svg" xmlns="http://www.w3.org/2000/svg"
+             preserveAspectRatio="xMidYMid meet"
+             viewBox="0 0 693 693"
+             width="693" height="693">
+            <defs>
+                <linearGradient id="cyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#00aaff;stop-opacity:1" />
+                </linearGradient>
+                 <linearGradient id="magentaGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#ff00a0;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ff40c0;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <g stroke-width="1.5" fill="none">
+                <!-- Lines -->
+                <polyline class="glow" stroke="url(#cyanGradient)" points="150,150 250,250 350,150" />
+                <line class="glow" stroke="#00ffff" x1="250" y1="250" x2="250" y2="450" />
+                <line stroke="#34495e" x1="350" y1="150" x2="500" y2="300" />
+                <polyline stroke="#34495e" points="250,450 400,550 500,450" />
+                <line class="glow" stroke="url(#magentaGradient)" x1="500" y1="300" x2="650" y2="400" />
+                <line stroke="#34495e" x1="500" y1="450" x2="650" y2="400" />
+
+                <!-- Nodes -->
+                <circle class="glow" cx="150" cy="150" r="12" fill="#10141a" stroke="#00ffff"/>
+                <circle cx="250" cy="250" r="15" fill="#10141a" stroke="url(#cyanGradient)" stroke-width="2"/>
+                <circle cx="350" cy="150" r="10" fill="#10141a" stroke="#ffffff"/>
+                <circle cx="250" cy="450" r="20" fill="#10141a" stroke="#ffffff"/>
+                <circle class="glow" cx="400" cy="550" r="12" fill="#10141a" stroke="#ff00a0"/>
+                <circle class="glow" cx="500" cy="300" r="18" fill="#10141a" stroke="#00ffff"/>
+                <circle cx="500" cy="450" r="10" fill="#10141a" stroke="#ffffff"/>
+                <circle class="glow" cx="650" cy="400" r="25" fill="#10141a" stroke="url(#magentaGradient)" stroke-width="2"/>
+            </g>
+        </svg>
+
+        <!-- Right / Bottom Half -->
+        <svg class="right-svg" xmlns="http://www.w3.org/2000/svg"
+             preserveAspectRatio="xMidYMid meet"
+             viewBox="693 0 693 693"
+             width="693" height="693">
+            <defs>
+                <linearGradient id="cyanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#00ffff;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#00aaff;stop-opacity:1" />
+                </linearGradient>
+                 <linearGradient id="magentaGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#ff00a0;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ff40c0;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <g stroke-width="1.5" fill="none">
+                 <!-- Lines -->
+                <line stroke="#34495e" x1="850" y1="200" x2="650" y2="400" />
+                <polyline stroke="#34495e" points="850,200 950,300 850,400" />
+                <line class="glow" stroke="url(#cyanGradient)" x1="650" y1="400" x2="850" y2="400" />
+                <line class="glow" stroke="#00ffff" x1="950" y1="300" x2="1100" y2="250" />
+                <line stroke="#34495e" x1="850" y1="400" x2="950" y2="500" />
+                <polyline stroke="url(#magentaGradient)" points="950,500 1100,550 1200,450" />
+
+                <!-- Nodes -->
+                <circle class="glow" cx="850" cy="200" r="15" fill="#10141a" stroke="#00ffff"/>
+                <circle class="glow" cx="950" cy="300" r="10" fill="#10141a" stroke="#00ffff"/>
+                <circle cx="850" cy="400" r="20" fill="#10141a" stroke="url(#cyanGradient)" stroke-width="2"/>
+                <circle cx="1100" cy="250" r="12" fill="#10141a" stroke="#ffffff"/>
+                <circle class="glow" cx="950" cy="500" r="18" fill="#10141a" stroke="#ff00a0"/>
+                <circle class="glow" cx="1100" cy="550" r="10" fill="#10141a" stroke="#ff00a0"/>
+                <circle cx="1200" cy="450" r="25" fill="#10141a" stroke="url(#magentaGradient)" stroke-width="2"/>
+            </g>
+        </svg>
+    </div>
+
+</body>
+</html>
